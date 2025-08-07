@@ -1,0 +1,123 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #1f2c3e;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+
+.container {
+  width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #00e676;
+}
+
+.card {
+  background-color: #2c3e50;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+button {
+  background-color: #00e676;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 10px 5px;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #00c853;
+}
+
+textarea,
+input[type="url"],
+input[type="datetime-local"],
+input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+input[type="datetime-local"] {
+  background-color: #fff;
+  color: #000;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  opacity: 1;
+  filter: invert(1);
+  background-color: #fff;
+  padding: 2px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#qrContainer img {
+  margin-top: 15px;
+  width: 200px;
+  border-radius: 10px;
+  border: 4px solid #00e676;
+}
+
+#logTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+#logTable th,
+#logTable td {
+  border: 1px solid #00e676;
+  padding: 10px;
+  text-align: left;
+}
+
+#logTable th {
+  background-color: #263445;
+  color: #00e676;
+}
+
+#logTable td {
+  background-color: #1e293b;
+  color: #fff;
+}
+
+/* Center inner content buttons */
+.card > div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+
+/* ✅ Style for WhatsApp Group List */
+#groupList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+  justify-content: center;
+}

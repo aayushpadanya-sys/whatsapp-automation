@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>📈 WhatsApp Automation Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>📈 WhatsApp Automation Dashboard</h1>
+
+    <!-- Connect to WhatsApp -->
+    <div class="card">
+      <button id="connectBtn" onclick="connectToWhatsApp()">🔌 Connect to WhatsApp</button>
+      <div id="qrContainer"></div>
+    </div>
+
+    <!-- Group Selection Buttons -->
+    <div class="card">
+      <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+        <button onclick="selectAll()">✅ Select All</button>
+        <button onclick="deselectGroups()">❌ Deselect All</button>
+      </div>
+    </div>
+
+    <!-- Message Form -->
+    <div class="card">
+      <label><b>📢 Message:</b></label>
+      <textarea id="messageText" placeholder="Type your message..."></textarea>
+
+      <label><b>🔗 Meeting Link:</b></label>
+      <input type="url" id="meetingLink" placeholder="https://zoom.us/..." />
+
+      <label><b>📷 Upload Image:</b></label>
+      <input type="file" id="imageInput" accept="image/*" />
+
+      <label><b>🗓️ Schedule Time:</b></label>
+      <input type="datetime-local" id="scheduleTime" />
+
+      <button id="sendBtn" onclick="sendMessage()">📤 Send to Selected Groups</button>
+    </div>
+
+    <!-- Logs Table -->
+    <div class="card">
+      <h3>📄 Sent Logs</h3>
+      <table id="logTable">
+        <thead>
+          <tr>
+            <th>Group</th>
+            <th>Message</th>
+            <th>Link</th>
+            <th>Image</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody id="logBody"></tbody>
+      </table>
+      <button onclick="downloadLogs()">⬇️ Download Logs</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
