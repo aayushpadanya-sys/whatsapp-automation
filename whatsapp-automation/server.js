@@ -1,3 +1,20 @@
+const SCHEDULE_FILE = path.join(__dirname, 'scheduled-messages.json');
+
+function loadScheduledMessages() {
+  if (!fs.existsSync(SCHEDULE_FILE)) return [];
+  try {
+    const data = fs.readFileSync(SCHEDULE_FILE);
+    return JSON.parse(data);
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveScheduledMessages(messages) {
+  fs.writeFileSync(SCHEDULE_FILE, JSON.stringify(messages, null, 2));
+}
+
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -104,16 +121,18 @@ app.post('/send-message', upload.single('image'), async (req, res) => {
   const delay = scheduledTimestamp - now;
   const chats = await client.getChats();
 
-const sendToGroup = async (group) => {
-  const chatId = group.id._serialized;
-
-  // ✅ 1. Send image with caption = plain message
-  if (req.file) {
-    const media = MessageMedia.fromFilePath(req.file.path);
-    await client.sendMessage(chatId, media, {
-      caption: message || ''
+const sendToGroup = async (group, payload) => {
+  if (payload.imagePath) {
+    const media = MessageMedia.fromFilePath(payload.imagePath);
+    await client.sendMessage(payload.groupId, media, {
+      caption: payload.message || ''
     });
   }
+
+  if (payload.meetingLink) {
+    await client.sendMessage(payload.groupId, `Join Meeting: ${payload.meetingLink}`);
+  }
+};
 
   // ✅ 2. Send Zoom link as a separate message (optional)
   if (meetingLink) {
@@ -123,22 +142,33 @@ const sendToGroup = async (group) => {
 
 
 
-  parsedGroups.forEach(name => {
-    const group = chats.find(c => c.isGroup && c.name === name);
-    if (!group) return;
+ const pending = [];
 
-    if (delay > 0) {
-      setTimeout(() => sendToGroup(group), delay);
-    } else {
-      sendToGroup(group);
-    }
-  });
+parsedGroups.forEach(name => {
+  const group = chats.find(c => c.isGroup && c.name === name);
+  if (!group) return;
 
-  res.json({
-    status: delay > 0 ? `Messages scheduled...` : 'Messages sent immediately',
-    savedImage: req.file?.filename || ''
-  });
+  const payload = {
+    groupId: group.id._serialized,
+    groupName: group.name,
+    message,
+    meetingLink,
+    imagePath: req.file?.path || '',
+    scheduledTime: scheduledTimestamp
+  };
+
+  if (delay > 0) {
+    pending.push(payload);
+  } else {
+    sendToGroup(group, payload);
+  }
 });
+
+if (pending.length > 0) {
+  const current = loadScheduledMessages();
+  saveScheduledMessages([...current, ...pending]);
+}
+
 
   
 
@@ -157,5 +187,6 @@ app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
   exec(`start http://localhost:${port}`);
 });
+
 
 
