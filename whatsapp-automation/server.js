@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const { executablePath } = require('puppeteer');
 const { execSync, exec } = require('child_process');
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const qrcode = require('qrcode');
@@ -48,11 +49,12 @@ const upload = multer({ storage: storage });
 const client = new Client({
   authStrategy: new LocalAuth(),
   puppeteer: {
-    executablePath: executablePath(), // ✅ Correct way on Render
+    executablePath: executablePath(), // 👈 Required for Render
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   }
 });
+
 
 
 let qrData = '';
@@ -155,4 +157,5 @@ app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
   exec(`start http://localhost:${port}`);
 });
+
 
