@@ -22,12 +22,15 @@ if (fs.existsSync(authPath)) {
 }
 
 // Kill existing Chrome sessions (optional but helpful)
-try {
-  execSync('taskkill /F /IM chrome.exe');
-  console.log('[Cleanup] Chrome processes killed');
-} catch (err) {
-  console.log('[Cleanup] No Chrome processes found');
+if (process.platform === 'win32') {
+  try {
+    execSync('taskkill /F /IM chrome.exe');
+    console.log('[Cleanup] Chrome processes killed');
+  } catch (err) {
+    console.log('[Cleanup] No Chrome processes found');
+  }
 }
+
 
 // File upload setup
 const storage = multer.diskStorage({
@@ -45,10 +48,12 @@ const upload = multer({ storage: storage });
 const client = new Client({
   authStrategy: new LocalAuth(),
   puppeteer: {
+    executablePath: executablePath(), // ✅ Correct way on Render
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   }
 });
+
 
 let qrData = '';
 let isReady = false;
@@ -150,3 +155,4 @@ app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
   exec(`start http://localhost:${port}`);
 });
+
