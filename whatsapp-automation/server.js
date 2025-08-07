@@ -187,6 +187,26 @@ app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
   exec(`start http://localhost:${port}`);
 });
+setInterval(async () => {
+  const now = Date.now();
+  let messages = loadScheduledMessages();
+  const ready = messages.filter(m => now >= m.scheduledTime);
+  const pending = messages.filter(m => now < m.scheduledTime);
+
+  const chats = await client.getChats();
+
+  for (let msg of ready) {
+    const group = chats.find(c => c.isGroup && c.id._serialized === msg.groupId);
+    if (group) {
+      await sendToGroup(group, msg);
+    }
+  }
+
+  if (ready.length > 0) {
+    saveScheduledMessages(pending);
+  }
+}, 60 * 1000); // checks every 1 minute
+
 
 
 
